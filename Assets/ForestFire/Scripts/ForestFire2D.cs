@@ -10,6 +10,9 @@ public class ForestFire2D : MonoBehaviour
     public int gridSizeY; // y size of the grid
     public int nlight; // the number of trees to set alight at the start of the game
     public int xC, yC; // used for picking random x, y points
+    public int riverStartSide; // used to hold the random side for starting the river generation
+    public int riverStartPosition; // variable to hold how long along the start side to start the river
+    public int rXC, rYC; // variables to hold the current x and y co-ord for generating the river 
     public int windDirection; // new variable that holds the wind direction - goes from 1 (N) to 8 (NW)
     public int windSpeed; // new variable for wind speed - takes values 0 (no wind), 1 (gentle wind), 2 (strong wind)
 
@@ -127,6 +130,34 @@ public class ForestFire2D : MonoBehaviour
                     nlight = nlight - 1;     // decrase number of trees to light by 1
                 }
             } while (nlight > 0);  // when you've lit them all exit this loop
+
+            // I think here is the right place to set the river up
+            riverStartSide = UnityEngine.Random.Range(1, 5); // 1 is North, 2 is East, 3 is South, 4 is West
+            riverStartPosition = UnityEngine.Random.Range(5, 45); // picks how far along the side to start generating the river, missing off 10 slots each end so it isn't right on the edge
+            if (riverStartSide == 1)
+            {
+                rXC = riverStartPosition;
+                rYC = 49;
+            }
+            else if (riverStartSide == 2)
+            {
+                rXC = 49;
+                rYC = riverStartPosition;
+            }
+            else if (riverStartSide == 3)
+            {
+                rXC = riverStartPosition;
+                rYC = 0;
+            }
+            else if (riverStartSide == 4)
+            {
+                rXC = 0;
+                rYC = riverStartPosition;
+            }
+
+            objectArray[rXC, rYC] = 4; // set that cell to river, so I can see it
+
+
         }
                 // update the visual state of each cell
                 UpdateGridVisuals();
@@ -459,6 +490,10 @@ public class ForestFire2D : MonoBehaviour
                 else if (objectArray[xCount, yCount] == 0) // rock
                 {
                     cellSpriteRenderers[xCount, yCount].color = Color.grey;
+                }
+                else if (objectArray[xCount, yCount] == 4) // river
+                {
+                    cellSpriteRenderers[xCount, yCount].color = Color.blue;
                 }
                 else if (objectArray[xCount, yCount] != 0 && fuelArray[xCount, yCount] <= 0) // it's not a rock but it's fuel is zero, therefore it must be burnt out grass or tree
                 {
