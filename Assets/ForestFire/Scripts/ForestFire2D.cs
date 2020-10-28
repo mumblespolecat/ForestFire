@@ -150,9 +150,9 @@ public class ForestFire2D : MonoBehaviour
     // update the status of each cell on grid according to the rules of the game
     private void UpdateCells()
     {
-        // change the wind direction randomly
+        // change the wind direction randomly - change 30% of the time as this is a bit more constant - anecdotally
         xC = UnityEngine.Random.Range(0, 100); // generate a random number between 0 and 100
-        if (xC >70) // change 30% of the time
+        if (xC >70)
         {
             windDirection = windDirection + UnityEngine.Random.Range(-1, 2); // change windDirection by -1, 0 or 1
 
@@ -164,12 +164,12 @@ public class ForestFire2D : MonoBehaviour
             {
                 windDirection = 1;
             }
-            //windDirection = 6; // Setting windDirection to 6 here sets its direction temporarily and all of the above if statement is over ruled by it, just to make sure it worked.  Get rid of this line when you've doneit all
+            // windDirection = 4; // Setting windDirection here for testing to see if it actually has an impact
         }
 
-        // change the wind speed randomly
+        // change the wind speed randomly - change 50% of the time as this is a bit more volatile - also anecdotally !
         xC = UnityEngine.Random.Range(0, 100); // generate a random number between 0 and 100
-        if (xC > 50) // change 50% of the time
+        if (xC > 50)
         {
             windSpeed = windSpeed + UnityEngine.Random.Range(-1, 2); // change windSpeed by -1, 0 or 1
 
@@ -181,6 +181,7 @@ public class ForestFire2D : MonoBehaviour
             {
                 windSpeed = 2;
             }
+            // windSpeed = 2; // setting windSpeed here for testing to see if it actually has an impact
         }
 
 
