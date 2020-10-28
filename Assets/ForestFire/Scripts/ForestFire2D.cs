@@ -15,6 +15,7 @@ public class ForestFire2D : MonoBehaviour
     public int rXC, rYC; // variables to hold the current x and y co-ord for generating the river
     public int directionOfRiver; // variable to hold the direction the river goes in on generation
     public int oldDirectionOfRiver; // variable to hold where the river has come from so it doesn't keep going back on itself
+    public int edgeBounce; // number of times river tries to fall off grid. It gets 15 chances
     public int windDirection; // new variable that holds the wind direction - goes from 1 (N) to 8 (NW)
     public int windSpeed; // new variable for wind speed - takes values 0 (no wind), 1 (gentle wind), 2 (strong wind)
 
@@ -160,6 +161,7 @@ public class ForestFire2D : MonoBehaviour
             }
 
             objectArray[rXC, rYC] = 4; // set that cell to river, so I can see it
+            edgeBounce = 0;
             
             do
             {
@@ -167,26 +169,55 @@ public class ForestFire2D : MonoBehaviour
                             
                 if (directionOfRiver == 1) // move 1 cell north
                 {
-                    rYC++;
+                    if (rYC == 49)
+                    {
+                        edgeBounce++;
+                    }
+                    else
+                    {
+                        rYC++;
+                    }
                 }
                 else if (directionOfRiver == 2) // move 1 cell east
                 {
-                    rXC++;
+                    if (rXC == 49)
+                    {
+                        edgeBounce++;
+                    }
+                    else
+                    {
+                        rXC++;
+                    }
                 }
                 else if (directionOfRiver == 3) // move 1 cell south
                 {
-                    rYC--;
+                    if (rYC == 0)
+                    {
+                        edgeBounce++;
+                    }
+                    else
+                    {
+                        rYC--;
+                    }
                 }
                 else if (directionOfRiver == 4) // move 1 cell west
                 {
-                    rXC--;
+                    if (rXC == 0)
+                    {
+                        edgeBounce++;
+                    }
+                    else
+                    {
+                        rXC--;
+                    }
                 }
 
                 objectArray[rXC, rYC] = 4; // set that cell to river, so I can see it
+                fuelArray[rXC, rYC] = 0;   // as it's a river, set fuel to 0 so it doesn't burn
 
 
 
-            } while (rXC <= 49 && rXC >= 0 && rYC <= 49 && rYC >= 0);
+            } while (rXC <= 49 && rXC >= 0 && rYC <= 49 && rYC >= 0 && edgeBounce <=15);
 
 
         }
