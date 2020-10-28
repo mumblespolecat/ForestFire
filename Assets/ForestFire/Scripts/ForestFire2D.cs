@@ -12,7 +12,9 @@ public class ForestFire2D : MonoBehaviour
     public int xC, yC; // used for picking random x, y points
     public int riverStartSide; // used to hold the random side for starting the river generation
     public int riverStartPosition; // variable to hold how long along the start side to start the river
-    public int rXC, rYC; // variables to hold the current x and y co-ord for generating the river 
+    public int rXC, rYC; // variables to hold the current x and y co-ord for generating the river
+    public int directionOfRiver; // variable to hold the direction the river goes in on generation
+    public int oldDirectionOfRiver; // variable to hold where the river has come from so it doesn't keep going back on itself
     public int windDirection; // new variable that holds the wind direction - goes from 1 (N) to 8 (NW)
     public int windSpeed; // new variable for wind speed - takes values 0 (no wind), 1 (gentle wind), 2 (strong wind)
 
@@ -134,28 +136,57 @@ public class ForestFire2D : MonoBehaviour
             // I think here is the right place to set the river up
             riverStartSide = UnityEngine.Random.Range(1, 5); // 1 is North, 2 is East, 3 is South, 4 is West
             riverStartPosition = UnityEngine.Random.Range(5, 45); // picks how far along the side to start generating the river, missing off 10 slots each end so it isn't right on the edge
-            if (riverStartSide == 1)
+            
+            // this set of if statements looks to see which side the river is starting on and sets the coordinates
+            if (riverStartSide == 1) // north
             {
                 rXC = riverStartPosition;
                 rYC = 49;
             }
-            else if (riverStartSide == 2)
+            else if (riverStartSide == 2) // east
             {
                 rXC = 49;
                 rYC = riverStartPosition;
             }
-            else if (riverStartSide == 3)
+            else if (riverStartSide == 3) // south
             {
                 rXC = riverStartPosition;
                 rYC = 0;
             }
-            else if (riverStartSide == 4)
+            else if (riverStartSide == 4) // west
             {
                 rXC = 0;
                 rYC = riverStartPosition;
             }
 
             objectArray[rXC, rYC] = 4; // set that cell to river, so I can see it
+            
+            do
+            {
+                directionOfRiver = UnityEngine.Random.Range(1, 5); // 1 is North, 2 is East, 3 is South, 4 is West
+                            
+                if (directionOfRiver == 1) // move 1 cell north
+                {
+                    rYC++;
+                }
+                else if (directionOfRiver == 2) // move 1 cell east
+                {
+                    rXC++;
+                }
+                else if (directionOfRiver == 3) // move 1 cell south
+                {
+                    rYC--;
+                }
+                else if (directionOfRiver == 4) // move 1 cell west
+                {
+                    rXC--;
+                }
+
+                objectArray[rXC, rYC] = 4; // set that cell to river, so I can see it
+
+
+
+            } while (rXC <= 49 && rXC >= 0 && rYC <= 49 && rYC >= 0);
 
 
         }
