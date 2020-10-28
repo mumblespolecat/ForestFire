@@ -161,8 +161,10 @@ public class ForestFire2D : MonoBehaviour
             }
 
             objectArray[rXC, rYC] = 4; // set that cell to river, so I can see it
-            edgeBounce = 0;
+            edgeBounce = 0; // set edgeBounce to 0
             
+            // this loop, loops to build the river. It takes a random direction, and checks to see if that would take it off the edge. Bounces it if it does (up to a max of 15 times) and moves in that direction if not.
+            // stays looping whlie the river / water feature is still on the grid and the max number of bounces hasn't been reached.
             do
             {
                 directionOfRiver = UnityEngine.Random.Range(1, 5); // 1 is North, 2 is East, 3 is South, 4 is West
