@@ -11,6 +11,7 @@ public class ForestFire2D : MonoBehaviour
     public int nlight; // the number of trees to set alight at the start of the game
     public int xC, yC; // used for picking random x, y points
     public int windDirection; // new variable that holds the wind direction - goes from 1 (N) to 8 (NW)
+    public int windSpeed; // new variable for wind speed - takes values 0 (no wind), 1 (gentle wind), 2 (strong wind)
 
     public Sprite cellSprite; // sprite used to represent a cell on the grid
     public Text gameRunningText; // text used to display whether the game is running
@@ -41,7 +42,8 @@ public class ForestFire2D : MonoBehaviour
         CreateGrid(gridSizeX, gridSizeY);
         PauseGame(true);
         UpdateGridVisuals();
-        windDirection = UnityEngine.Random.Range(1, 8); // set a random value to windDirection
+        windDirection = UnityEngine.Random.Range(1, 8); // set a random initial value to windDirection
+        windSpeed = UnityEngine.Random.Range(0, 2); // set a random initial value to windSpeed
     }
 
     // this function controls whether or not to pause the game
@@ -150,9 +152,9 @@ public class ForestFire2D : MonoBehaviour
     {
         // change the wind direction randomly
         xC = UnityEngine.Random.Range(0, 100); // generate a random number between 0 and 100
-        if (xC >50)
+        if (xC >70) // change 30% of the time
         {
-            windDirection = windDirection + UnityEngine.Random.Range(-1, 2);
+            windDirection = windDirection + UnityEngine.Random.Range(-1, 2); // change windDirection by -1, 0 or 1
 
             if (windDirection < 1)
             {
@@ -162,9 +164,24 @@ public class ForestFire2D : MonoBehaviour
             {
                 windDirection = 1;
             }
-            windDirection = 6; // Setting windDirection to 6 here sets its direction temporarily and all of the above if statement is over ruled by it, just to make sure it worked.  Get rid of this line when you've doneit all
+            //windDirection = 6; // Setting windDirection to 6 here sets its direction temporarily and all of the above if statement is over ruled by it, just to make sure it worked.  Get rid of this line when you've doneit all
         }
 
+        // change the wind speed randomly
+        xC = UnityEngine.Random.Range(0, 100); // generate a random number between 0 and 100
+        if (xC > 50) // change 50% of the time
+        {
+            windSpeed = windSpeed + UnityEngine.Random.Range(-1, 2); // change windSpeed by -1, 0 or 1
+
+            if (windSpeed < 0)
+            {
+                windSpeed = 0;
+            }
+            else if (windSpeed > 2)
+            {
+                windSpeed = 2;
+            }
+        }
 
 
         // iterate through each cell in the rows and columns
@@ -246,9 +263,111 @@ public class ForestFire2D : MonoBehaviour
                     {
                         alightNeighbourCells++;
 
-                        if (xPosition == cellPositionX +1 && yPosition == cellPositionY +1 && windDirection == 6) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 6
+                        // this set of if statements increases the alightNeighbourCells count by 1 if the wind is coming fromm the appropriate direction - the initial set up 
+                        // and the first of the if statements was written with Steve helping.  The rest of the iplementation was done on my own
+
+                        if (xPosition == cellPositionX && yPosition == cellPositionY -1 && windDirection == 1) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 1
                         {
-                            alightNeighbourCells++;
+                            if (windSpeed == 1)
+                            {
+                                alightNeighbourCells++;
+                            }
+                             else if (windSpeed ==2)
+                            {
+                                alightNeighbourCells++;
+                                alightNeighbourCells++;
+                            }
+                        }
+
+                        else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY - 1 && windDirection == 2) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 2
+                        {
+                            if (windSpeed == 1)
+                            {
+                                alightNeighbourCells++;
+                            }
+                            else if (windSpeed == 2)
+                            {
+                                alightNeighbourCells++;
+                                alightNeighbourCells++;
+                            }
+                        }
+
+                        else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY && windDirection == 3) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 3
+                        {
+                            if (windSpeed == 1)
+                            {
+                                alightNeighbourCells++;
+                            }
+                            else if (windSpeed == 2)
+                            {
+                                alightNeighbourCells++;
+                                alightNeighbourCells++;
+                            }
+                        }
+
+                        else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY + 1 && windDirection == 4) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 4
+                        {
+                            if (windSpeed == 1)
+                            {
+                                alightNeighbourCells++;
+                            }
+                            else if (windSpeed == 2)
+                            {
+                                alightNeighbourCells++;
+                                alightNeighbourCells++;
+                            }
+                        }
+
+                        else if (xPosition == cellPositionX && yPosition == cellPositionY + 1 && windDirection == 5) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 5
+                        {
+                            if (windSpeed == 1)
+                            {
+                                alightNeighbourCells++;
+                            }
+                            else if (windSpeed == 2)
+                            {
+                                alightNeighbourCells++;
+                                alightNeighbourCells++;
+                            }
+                        }
+
+                        else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY + 1 && windDirection == 6) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 6
+                        {
+                            if (windSpeed == 1)
+                            {
+                                alightNeighbourCells++;
+                            }
+                            else if (windSpeed == 2)
+                            {
+                                alightNeighbourCells++;
+                                alightNeighbourCells++;
+                            }
+                        }
+
+                        else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY && windDirection == 7) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 7
+                        {
+                            if (windSpeed == 1)
+                            {
+                                alightNeighbourCells++;
+                            }
+                            else if (windSpeed == 2)
+                            {
+                                alightNeighbourCells++;
+                                alightNeighbourCells++;
+                            }
+                        }
+
+                        else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY - 1 && windDirection == 8) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 8
+                        {
+                            if (windSpeed == 1)
+                            {
+                                alightNeighbourCells++;
+                            }
+                            else if (windSpeed == 2)
+                            {
+                                alightNeighbourCells++;
+                                alightNeighbourCells++;
+                            }
                         }
 
                         // we don't want to check if the specified cell is alight, only its neighbours so it was added, subtract it
