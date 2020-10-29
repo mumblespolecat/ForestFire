@@ -360,110 +360,46 @@ public class ForestFire2D : MonoBehaviour
                         alightNeighbourCells++;
 
                         // this set of if statements increases the alightNeighbourCells count by 1 if the wind is coming fromm the appropriate direction - the initial set up 
-                        // and the first of the if statements was written with Steve helping.  The rest of the iplementation was done on my own
+                        // and the first of the if statements was written with Steve helping.  The rest of the implementation, I did.
 
                         if (xPosition == cellPositionX && yPosition == cellPositionY -1 && windDirection == 1) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 1
                         {
-                            if (windSpeed == 1)
-                            {
-                                alightNeighbourCells++;
-                            }
-                             else if (windSpeed ==2)
-                            {
-                                alightNeighbourCells++;
-                                alightNeighbourCells++;
-                            }
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
                         }
 
                         else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY - 1 && windDirection == 2) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 2
                         {
-                            if (windSpeed == 1)
-                            {
-                                alightNeighbourCells++;
-                            }
-                            else if (windSpeed == 2)
-                            {
-                                alightNeighbourCells++;
-                                alightNeighbourCells++;
-                            }
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
                         }
 
                         else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY && windDirection == 3) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 3
                         {
-                            if (windSpeed == 1)
-                            {
-                                alightNeighbourCells++;
-                            }
-                            else if (windSpeed == 2)
-                            {
-                                alightNeighbourCells++;
-                                alightNeighbourCells++;
-                            }
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
                         }
 
                         else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY + 1 && windDirection == 4) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 4
                         {
-                            if (windSpeed == 1)
-                            {
-                                alightNeighbourCells++;
-                            }
-                            else if (windSpeed == 2)
-                            {
-                                alightNeighbourCells++;
-                                alightNeighbourCells++;
-                            }
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
                         }
 
                         else if (xPosition == cellPositionX && yPosition == cellPositionY + 1 && windDirection == 5) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 5
                         {
-                            if (windSpeed == 1)
-                            {
-                                alightNeighbourCells++;
-                            }
-                            else if (windSpeed == 2)
-                            {
-                                alightNeighbourCells++;
-                                alightNeighbourCells++;
-                            }
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
                         }
 
                         else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY + 1 && windDirection == 6) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 6
                         {
-                            if (windSpeed == 1)
-                            {
-                                alightNeighbourCells++;
-                            }
-                            else if (windSpeed == 2)
-                            {
-                                alightNeighbourCells++;
-                                alightNeighbourCells++;
-                            }
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
                         }
 
                         else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY && windDirection == 7) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 7
                         {
-                            if (windSpeed == 1)
-                            {
-                                alightNeighbourCells++;
-                            }
-                            else if (windSpeed == 2)
-                            {
-                                alightNeighbourCells++;
-                                alightNeighbourCells++;
-                            }
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
                         }
 
                         else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY - 1 && windDirection == 8) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 8
                         {
-                            if (windSpeed == 1)
-                            {
-                                alightNeighbourCells++;
-                            }
-                            else if (windSpeed == 2)
-                            {
-                                alightNeighbourCells++;
-                                alightNeighbourCells++;
-                            }
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
                         }
 
                         // we don't want to check if the specified cell is alight, only its neighbours so it was added, subtract it
@@ -477,6 +413,21 @@ public class ForestFire2D : MonoBehaviour
         }
 
         // return the number of alight neighbour cells
+        return alightNeighbourCells;
+    }
+
+    private int AddForWind(int alightNeighbourCells)
+    {
+        if (windSpeed == 1)
+        {
+            alightNeighbourCells++;
+        }
+        else if (windSpeed == 2)
+        {
+            alightNeighbourCells++;
+            alightNeighbourCells++;
+        }
+
         return alightNeighbourCells;
     }
 
