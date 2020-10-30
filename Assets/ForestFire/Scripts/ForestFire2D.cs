@@ -88,7 +88,6 @@ public class ForestFire2D : MonoBehaviour
             }
         }
 
-
         // check if the R key has been pressed. this key will clear the grid and pause the game
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -134,7 +133,7 @@ public class ForestFire2D : MonoBehaviour
                 }
             } while (nlight > 0);  // when you've lit them all exit this loop
 
-            // I think here is the right place to set the river up
+            // here is the right place to set the river up
             riverStartSide = UnityEngine.Random.Range(1, 5); // 1 is North, 2 is East, 3 is South, 4 is West
             riverStartPosition = UnityEngine.Random.Range(5, 45); // picks how far along the side to start generating the river, missing off 10 slots each end so it isn't right on the edge
             
@@ -160,8 +159,8 @@ public class ForestFire2D : MonoBehaviour
                 rYC = riverStartPosition;
             }
 
-            objectArray[rXC, rYC] = 4; // set that cell to river, so I can see it
-            edgeBounce = 0; // set edgeBounce to 0
+            objectArray[rXC, rYC] = 4; // set that cell to river
+            edgeBounce = 0; // set edgeBounce to 0 - edgebounce is the number of times the river can fall off the edge (and be put back on)
             
             // this loop, loops to build the river. It takes a random direction, and checks to see if that would take it off the edge. Bounces it if it does (up to a max of 15 times) and moves in that direction if not.
             // stays looping whlie the river / water feature is still on the grid and the max number of bounces hasn't been reached.
@@ -506,7 +505,7 @@ public class ForestFire2D : MonoBehaviour
                 {
                     cellSpriteRenderers[xCount, yCount].color = Color.grey;
                 }
-                else if (objectArray[xCount, yCount] == 4) // river
+                else if (objectArray[xCount, yCount] == 4) // river // set river cells to blue (Fuel already set to 0 at generation point)
                 {
                     cellSpriteRenderers[xCount, yCount].color = Color.blue;
                 }
