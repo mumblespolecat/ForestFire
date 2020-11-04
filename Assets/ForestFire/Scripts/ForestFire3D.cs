@@ -11,6 +11,14 @@ public class ForestFire3D : MonoBehaviour
     public int gridSizeY; // y size of the grid
     public int nlight; // the number of trees to set alight at the start of the game
     public int xC, yC; // used for picking random x, y points
+    public int windDirection; // new variable that holds the wind direction - goes from 1 (N) to 8 (NW)
+    public int windSpeed; // new variable for wind speed - takes values 0 (no wind), 1 (gentle wind), 2 (strong wind)
+    public int riverStartSide; // used to hold the random side for starting the river generation
+    public int riverStartPosition; // variable to hold how long along the start side to start the river
+    public int rXC, rYC; // variables to hold the current x and y co-ord for generating the river
+    public int directionOfRiver; // variable to hold the direction the river goes in on generation
+    public int oldDirectionOfRiver; // variable to hold where the river has come from so it doesn't keep going back on itself
+    public int edgeBounce; // number of times river tries to fall off grid. It gets 15 chances
 
     public int rockChance; // the percentage chance a cell is assigned as rock
     public int grassChance; // the percentage chance a cell is assigned as grass
@@ -43,6 +51,8 @@ public class ForestFire3D : MonoBehaviour
         RandomiseGrid();
         PauseGame(true);
         UpdateGridVisuals();
+        windDirection = UnityEngine.Random.Range(1, 8); // set a random initial value to windDirection
+        windSpeed = UnityEngine.Random.Range(0, 2); // set a random initial value to windSpeed
     }
 
     // this function controls whether or not to pause the game
@@ -141,6 +151,93 @@ public class ForestFire3D : MonoBehaviour
             }
         } while (nlight > 0);  // when you've lit them all exit this loop
 
+        // here is the right place to set the river up
+        riverStartSide = UnityEngine.Random.Range(1, 5); // 1 is North, 2 is East, 3 is South, 4 is West
+        riverStartPosition = UnityEngine.Random.Range(5, 35); // picks how far along the side to start generating the river, missing off 10 slots each end so it isn't right on the edge
+
+        // this set of if statements looks to see which side the river is starting on and sets the coordinates
+        if (riverStartSide == 1) // north
+        {
+            rXC = riverStartPosition;
+            rYC = 39;
+        }
+        else if (riverStartSide == 2) // east
+        {
+            rXC = 39;
+            rYC = riverStartPosition;
+        }
+        else if (riverStartSide == 3) // south
+        {
+            rXC = riverStartPosition;
+            rYC = 0;
+        }
+        else if (riverStartSide == 4) // west
+        {
+            rXC = 0;
+            rYC = riverStartPosition;
+        }
+
+        forestFireCells[rXC, rYC].SetWater();
+        Debug.Log("edge set to " + rXC + " and " + rYC);
+        edgeBounce = 0; // set edgeBounce to 0 - edgebounce is the number of times the river can fall off the edge (and be put back on)
+
+        // this loop, loops to build the river. It takes a random direction, and checks to see if that would take it off the edge. Bounces it if it does (up to a max of 15 times) and moves in that direction if not.
+        // stays looping whlie the river / water feature is still on the grid and the max number of bounces hasn't been reached.
+        do
+        {
+            directionOfRiver = UnityEngine.Random.Range(1, 5); // 1 is North, 2 is East, 3 is South, 4 is West
+
+            if (directionOfRiver == 1) // move 1 cell north
+            {
+                if (rYC == 39)
+                {
+                    edgeBounce++;
+                }
+                else
+                {
+                    rYC++;
+                }
+            }
+            else if (directionOfRiver == 2) // move 1 cell east
+            {
+                if (rXC == 39)
+                {
+                    edgeBounce++;
+                }
+                else
+                {
+                    rXC++;
+                }
+            }
+            else if (directionOfRiver == 3) // move 1 cell south
+            {
+                if (rYC == 0)
+                {
+                    edgeBounce++;
+                }
+                else
+                {
+                    rYC--;
+                }
+            }
+            else if (directionOfRiver == 4) // move 1 cell west
+            {
+                if (rXC == 0)
+                {
+                    edgeBounce++;
+                }
+                else
+                {
+                    rXC--;
+                }
+            }
+
+            forestFireCells[rXC, rYC].SetWater(); // set that cell to river, so I can see it
+
+
+
+        } while (rXC <= 49 && rXC >= 0 && rYC <= 49 && rYC >= 0 && edgeBounce <= 15);
+
         // set the middle cell as grass which is where the player is placed
         forestFireCells[20, 20].SetGrass();
     }
@@ -149,6 +246,40 @@ public class ForestFire3D : MonoBehaviour
     // update the status of each cell on grid according to the rules of the game
     private void UpdateCells()
     {
+        // change the wind direction randomly - change 30% of the time as this is a bit more constant - anecdotally
+        xC = UnityEngine.Random.Range(0, 100); // generate a random number between 0 and 100
+        if (xC > 70)
+        {
+            windDirection = windDirection + UnityEngine.Random.Range(-1, 2); // change windDirection by -1, 0 or 1
+
+            if (windDirection < 1)
+            {
+                windDirection = 8;
+            }
+            else if (windDirection > 8)
+            {
+                windDirection = 1;
+            }
+            // windDirection = 4; // Setting windDirection here for testing to see if it actually has an impact
+        }
+
+        // change the wind speed randomly - change 50% of the time as this is a bit more volatile - also anecdotally !
+        xC = UnityEngine.Random.Range(0, 100); // generate a random number between 0 and 100
+        if (xC > 50)
+        {
+            windSpeed = windSpeed + UnityEngine.Random.Range(-1, 2); // change windSpeed by -1, 0 or 1
+
+            if (windSpeed < 0)
+            {
+                windSpeed = 0;
+            }
+            else if (windSpeed > 2)
+            {
+                windSpeed = 2;
+            }
+            // windSpeed = 2; // setting windSpeed here for testing to see if it actually has an impact
+        }
+
         // iterate through each cell in the rows and columns
         for (int xCount = 0; xCount < gridSizeX; xCount++)
         {
@@ -231,6 +362,49 @@ public class ForestFire3D : MonoBehaviour
                     {
                         alightNeighbourCells++;
 
+                        // this set of if statements increases the alightNeighbourCells count by 1 if the wind is coming fromm the appropriate direction - the initial set up 
+                        // and the first of the if statements was written with Steve helping.  The rest of the implementation, I did.
+
+                        if (xPosition == cellPositionX && yPosition == cellPositionY - 1 && windDirection == 1) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 1
+                        {
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
+                        }
+
+                        else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY - 1 && windDirection == 2) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 2
+                        {
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
+                        }
+
+                        else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY && windDirection == 3) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 3
+                        {
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
+                        }
+
+                        else if (xPosition == cellPositionX - 1 && yPosition == cellPositionY + 1 && windDirection == 4) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 4
+                        {
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
+                        }
+
+                        else if (xPosition == cellPositionX && yPosition == cellPositionY + 1 && windDirection == 5) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 5
+                        {
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
+                        }
+
+                        else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY + 1 && windDirection == 6) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 6
+                        {
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
+                        }
+
+                        else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY && windDirection == 7) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 7
+                        {
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
+                        }
+
+                        else if (xPosition == cellPositionX + 1 && yPosition == cellPositionY - 1 && windDirection == 8) // if statement to increase the value of alightNeighbourCells by 1 if the windDirection is set to 8
+                        {
+                            alightNeighbourCells = AddForWind(alightNeighbourCells);
+                        }
+
                         // we don't want to check if the specified cell is alight, only its neighbours so it was added, subtract it
                         if (xPosition == cellPositionX && yPosition == cellPositionY)
                         {
@@ -242,6 +416,21 @@ public class ForestFire3D : MonoBehaviour
         }
 
         // return the number of alight neighbour cells
+        return alightNeighbourCells;
+    }
+
+    private int AddForWind(int alightNeighbourCells)
+    {
+        if (windSpeed == 1)
+        {
+            alightNeighbourCells++;
+        }
+        else if (windSpeed == 2)
+        {
+            alightNeighbourCells++;
+            alightNeighbourCells++;
+        }
+
         return alightNeighbourCells;
     }
 
@@ -319,11 +508,18 @@ public class ForestFire3D : MonoBehaviour
                 }
                 else if (forestFireCells[xCount, yCount].cellState != ForestFireCell.State.Rock && forestFireCells[xCount, yCount].cellFuel <= 0)// it's not a rock but it's fuel is zero, therefore it must be burnt out grass or tree
                 {
-                    forestFireCells[xCount, yCount].SetBurnt();
+                    if (forestFireCells[xCount, yCount].cellState != ForestFireCell.State.Water)
+                    {
+                        forestFireCells[xCount, yCount].SetBurnt();
+                    }
                 }
                 else if (forestFireCells[xCount, yCount].cellState == ForestFireCell.State.Grass)
                 {
                     forestFireCells[xCount, yCount].SetGrass();
+                }
+                else if (forestFireCells[xCount, yCount].cellState == ForestFireCell.State.Water)
+                {
+                    forestFireCells[xCount, yCount].SetWater();
                 }
                 else if (forestFireCells[xCount, yCount].cellState == ForestFireCell.State.Tree)
                 {

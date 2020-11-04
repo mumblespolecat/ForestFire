@@ -16,6 +16,7 @@ public class ForestFireCell : MonoBehaviour
         Alight,
         Rock,
         Burnt,
+        Water,
     }
 
     public int cellFuel; // integer to store the amount of fuel in the cell
@@ -25,6 +26,7 @@ public class ForestFireCell : MonoBehaviour
     public Material groundMaterialGrass;
     public Material groundMaterialRock;
     public Material groundMaterialTree;
+    public Material groundMaterialWater;
     private MeshRenderer groundMeshRenderer; // reference to this cell's mesh renderer, used when changing material
 
     public GameObject treeObject; // reference to tree visual object
@@ -92,6 +94,19 @@ public class ForestFireCell : MonoBehaviour
             cellFuel = 0;
             groundMeshRenderer.material = groundMaterialRock;
             rockObject.SetActive(true);
+        }
+    }
+
+    // change cell state to water
+    public void SetWater()
+    {
+        if (cellState != State.Water)
+        {
+            cellState = State.Water;
+            cellFuel = 0;
+            groundMeshRenderer.material = groundMaterialWater;
+            treeObject.SetActive(false);
+            rockObject.SetActive(false);
         }
     }
 

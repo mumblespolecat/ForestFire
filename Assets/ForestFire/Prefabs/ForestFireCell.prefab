@@ -148,10 +148,11 @@ MonoBehaviour:
   groundMaterialGrass: {fileID: 2100000, guid: 9dccf2dcc78efe741b7931e3bb85beaf, type: 2}
   groundMaterialRock: {fileID: 2100000, guid: e7268e596932cb541834f57d320a4677, type: 2}
   groundMaterialTree: {fileID: 2100000, guid: 5558b5711d37782468eeee5c2880e7d8, type: 2}
+  groundMaterialWater: {fileID: 2100000, guid: 6f504d00d43337c4a92c498f62d581a0, type: 2}
   treeObject: {fileID: 4045407423716281207}
   leaves: {fileID: 4045407423716281205}
-  grassObject: {fileID: 0}
   rockObject: {fileID: 8846265225297738733}
+  waterObject: {fileID: 0}
   treeFireFVX: {fileID: 4754294210375399161, guid: 88ca74c2fda62784d928ebacea7a6063,
     type: 3}
   grassFireFVX: {fileID: 7581294509281810365, guid: 728031911f0d2374c939b093c1ef2e75,
