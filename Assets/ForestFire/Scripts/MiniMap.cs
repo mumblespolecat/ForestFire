@@ -63,6 +63,10 @@ public class MiniMap : MonoBehaviour
                 {
                     cellSpriteRenderers[xCount, yCount].color = Color.grey;
                 }
+                else if (forestFire3D.forestFireCells[xCount, yCount].cellState == ForestFireCell.State.Water) // river - it does set it to blue at the start, but changes to burnt too, like the 3d forest fire ...
+                {
+                    cellSpriteRenderers[xCount, yCount].color = Color.blue;
+                }
                 else if (forestFire3D.forestFireCells[xCount, yCount].cellState != ForestFireCell.State.Rock && forestFire3D.forestFireCells[xCount, yCount].cellFuel <= 0) 
                 {
                     cellSpriteRenderers[xCount, yCount].color = Color.black;

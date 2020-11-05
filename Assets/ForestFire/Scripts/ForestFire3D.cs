@@ -295,8 +295,17 @@ public class ForestFire3D : MonoBehaviour
 
                     if (forestFireCells[xCount, yCount].cellFuel <= 0) // has it burned all its fuel?
                     {
-                        // cell has no fuel so is burned out 
-                        forestFireCellsNextGenStates[xCount, yCount] = ForestFireCell.State.Burnt;
+                        // first, check it isn't water
+                        if (forestFireCells[xCount, yCount].cellState == ForestFireCell.State.Water)
+                        {
+                            forestFireCells[xCount, yCount].SetWater();  // just do that again, explicitly - see iuf that works
+                        }
+                        else
+                        {
+                            // cell has no fuel so is burned out 
+                            forestFireCellsNextGenStates[xCount, yCount] = ForestFireCell.State.Burnt;
+                        }
+                        
                     }
                     else // cell still has fuel so carries on burning
                     {
@@ -419,6 +428,7 @@ public class ForestFire3D : MonoBehaviour
         return alightNeighbourCells;
     }
 
+    // Add to the number of alight cells after looking at the wind
     private int AddForWind(int alightNeighbourCells)
     {
         if (windSpeed == 1)
